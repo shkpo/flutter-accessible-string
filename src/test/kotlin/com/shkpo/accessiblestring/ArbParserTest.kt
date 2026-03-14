@@ -48,8 +48,8 @@ class ArbParserTest {
         val result = parser.parse(tempDir.toString(), defaultConfig)
 
         assertNotNull(result)
-        assertEquals(1, result!!.uiKeys.size)
-        assertEquals("hoge", result.uiKeys[0].key)
+        assertEquals(1, result!!.entries.size)
+        assertEquals("hoge", result.entries[0].key)
     }
 
     // --- findMasterArbFile() ---
@@ -75,22 +75,25 @@ class ArbParserTest {
     // --- parseArbFile() ---
 
     @Test
-    fun `parseArbFile excludes reader-only keys from uiKeys`(@TempDir tempDir: Path) {
+    fun `parseArbFile excludes reader-only keys from entries`(@TempDir tempDir: Path) {
         val arb = tempDir.toFile().resolve("test.arb").also {
             it.writeText("""{"@@locale":"ja","btnOk":"OK","btnOkReader":"オーケー"}""")
         }
         val result = parser.parseArbFile(arb, "Reader")
-        assertEquals(listOf("btnOk"), result.uiKeys.map { it.key })
+        assertEquals(listOf("btnOk"), result.entries.map { it.key })
     }
 
     @Test
-    fun `parseArbFile detects paired keys`(@TempDir tempDir: Path) {
+    fun `parseArbFile detects paired keys via readerValue`(@TempDir tempDir: Path) {
         val arb = tempDir.toFile().resolve("test.arb").also {
             it.writeText("""{"@@locale":"ja","btnOk":"OK","btnOkReader":"オーケー","btnBack":"戻る"}""")
         }
         val result = parser.parseArbFile(arb, "Reader")
-        assertEquals(setOf("btnOk"), result.pairedKeys)
-        assertFalse(result.pairedKeys.contains("btnBack"))
+        val btnOk = result.entries.first { it.key == "btnOk" }
+        val btnBack = result.entries.first { it.key == "btnBack" }
+        assertNotNull(btnOk.readerValue)
+        assertEquals("オーケー", btnOk.readerValue)
+        assertNull(btnBack.readerValue)
     }
 
     @Test
@@ -99,7 +102,7 @@ class ArbParserTest {
             it.writeText("""{"@@locale":"ja","greeting":"こんにちは {name}、{age}歳"}""")
         }
         val result = parser.parseArbFile(arb, "Reader")
-        assertEquals(listOf("name", "age"), result.uiKeys[0].argNames)
+        assertEquals(listOf("name", "age"), result.entries[0].argNames)
     }
 
     @Test
@@ -108,7 +111,34 @@ class ArbParserTest {
             it.writeText("""{"@@locale":"ja","btnOk":"OK"}""")
         }
         val result = parser.parseArbFile(arb, "Reader")
-        assertTrue(result.uiKeys[0].argNames.isEmpty())
+        assertTrue(result.entries[0].argNames.isEmpty())
+    }
+
+    @Test
+    fun `parseArbFile stores labelValue correctly`(@TempDir tempDir: Path) {
+        val arb = tempDir.toFile().resolve("test.arb").also {
+            it.writeText("""{"@@locale":"ja","hoge":"ほーじ"}""")
+        }
+        val result = parser.parseArbFile(arb, "Reader")
+        assertEquals("ほーじ", result.entries[0].labelValue)
+    }
+
+    @Test
+    fun `parseArbFile stores readerValue correctly when paired`(@TempDir tempDir: Path) {
+        val arb = tempDir.toFile().resolve("test.arb").also {
+            it.writeText("""{"@@locale":"ja","btnOk":"OK","btnOkReader":"オーケー"}""")
+        }
+        val result = parser.parseArbFile(arb, "Reader")
+        assertEquals("オーケー", result.entries[0].readerValue)
+    }
+
+    @Test
+    fun `parseArbFile sets readerValue to null when not paired`(@TempDir tempDir: Path) {
+        val arb = tempDir.toFile().resolve("test.arb").also {
+            it.writeText("""{"@@locale":"ja","btnOk":"OK"}""")
+        }
+        val result = parser.parseArbFile(arb, "Reader")
+        assertNull(result.entries[0].readerValue)
     }
 
     @Test
@@ -117,8 +147,7 @@ class ArbParserTest {
             it.writeText("null")
         }
         val result = parser.parseArbFile(arb, "Reader")
-        assertTrue(result.uiKeys.isEmpty())
-        assertTrue(result.pairedKeys.isEmpty())
+        assertTrue(result.entries.isEmpty())
     }
 
     @Test
@@ -127,7 +156,7 @@ class ArbParserTest {
             it.writeText("""{"@@locale":"ja","@btnOk":{"description":"ok"},"btnOk":"OK"}""")
         }
         val result = parser.parseArbFile(arb, "Reader")
-        assertEquals(1, result.uiKeys.size)
-        assertEquals("btnOk", result.uiKeys[0].key)
+        assertEquals(1, result.entries.size)
+        assertEquals("btnOk", result.entries[0].key)
     }
 }

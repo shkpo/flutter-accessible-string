@@ -24,6 +24,7 @@ class DartCodeGenerator(private val vfsRefresher: IVfsRefresher) : IDartCodeGene
         sb.appendLine("// GENERATED CODE - DO NOT MODIFY BY HAND")
         sb.appendLine("// ignore_for_file: non_constant_identifier_names")
         sb.appendLine()
+        sb.appendLine("import 'package:flutter/widgets.dart';")
         sb.appendLine("import '$importPath';")
         sb.appendLine()
         sb.appendLine("class AccessibleString {")
@@ -36,24 +37,30 @@ class DartCodeGenerator(private val vfsRefresher: IVfsRefresher) : IDartCodeGene
         sb.appendLine("  }) : semanticsLabel = semanticsLabel ?? label;")
         sb.appendLine("}")
         sb.appendLine()
-        sb.appendLine("extension SAccessible on S {")
+        sb.appendLine("class SR {")
+        sb.appendLine("  final S _s;")
+        sb.appendLine("  SR(this._s);")
+        sb.appendLine()
+        sb.appendLine("  static SR of(BuildContext context) => SR(S.of(context));")
 
-        for (entry in parseResult.uiKeys) {
-            val isPaired = parseResult.pairedKeys.contains(entry.key)
+        for (entry in parseResult.entries) {
+            val isPaired = entry.readerValue != null
+            sb.appendLine()
+            sb.appendLine("  // label: \"${entry.labelValue}\"")
+            if (isPaired) sb.appendLine("  // semanticsLabel: \"${entry.readerValue}\"")
             if (entry.argNames.isEmpty()) {
                 sb.appendLine("  AccessibleString get ${entry.key} => AccessibleString(")
-                sb.appendLine("    label: ${entry.key},")
-                if (isPaired) sb.appendLine("    semanticsLabel: ${entry.key}$readerSuffix,")
+                sb.appendLine("    label: _s.${entry.key},")
+                if (isPaired) sb.appendLine("    semanticsLabel: _s.${entry.key}$readerSuffix,")
                 sb.appendLine("  );")
             } else {
                 val paramList = entry.argNames.joinToString(", ") { "dynamic $it" }
                 val argList = entry.argNames.joinToString(", ")
                 sb.appendLine("  AccessibleString ${entry.key}($paramList) => AccessibleString(")
-                sb.appendLine("    label: ${entry.key}($argList),")
-                if (isPaired) sb.appendLine("    semanticsLabel: ${entry.key}$readerSuffix($argList),")
+                sb.appendLine("    label: _s.${entry.key}($argList),")
+                if (isPaired) sb.appendLine("    semanticsLabel: _s.${entry.key}$readerSuffix($argList),")
                 sb.appendLine("  );")
             }
-            sb.appendLine()
         }
 
         val result = sb.toString().trimEnd()

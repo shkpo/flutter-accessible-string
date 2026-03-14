@@ -16,7 +16,7 @@ class AccessibleStringServiceTest {
     private lateinit var service: AccessibleStringService
 
     private val defaultConfig = AccessibleGenConfig()
-    private val defaultParseResult = ArbParseResult(uiKeys = emptyList(), pairedKeys = emptySet())
+    private val defaultParseResult = ArbParseResult(entries = emptyList())
 
     @BeforeEach
     fun setUp() {

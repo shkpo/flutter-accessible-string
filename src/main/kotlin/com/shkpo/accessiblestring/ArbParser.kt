@@ -4,8 +4,13 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
 
-data class ArbEntry(val key: String, val argNames: List<String>)
-data class ArbParseResult(val uiKeys: List<ArbEntry>, val pairedKeys: Set<String>)
+data class ArbEntry(
+    val key: String,
+    val argNames: List<String>,
+    val labelValue: String,
+    val readerValue: String?
+)
+data class ArbParseResult(val entries: List<ArbEntry>)
 
 class ArbParser : IArbParser {
 
@@ -43,14 +48,18 @@ class ArbParser : IArbParser {
         val allKeys = map.keys.filter { !it.startsWith("@") }
         val readerKeys = allKeys.filter { it.endsWith(readerSuffix) }.toSet()
         val uiKeyNames = allKeys.filter { !it.endsWith(readerSuffix) }
-        val pairedKeys = uiKeyNames.filter { readerKeys.contains("$it$readerSuffix") }.toSet()
 
-        val uiKeys = uiKeyNames.map { key ->
-            val value = map[key] as? String ?: ""
-            val argNames = placeholderRegex.findAll(value).map { it.groupValues[1] }.toList()
-            ArbEntry(key = key, argNames = argNames)
+        val entries = uiKeyNames.map { key ->
+            val labelValue = map[key] as? String ?: ""
+            val argNames = placeholderRegex.findAll(labelValue).map { it.groupValues[1] }.toList()
+            val readerValue = if (readerKeys.contains("$key$readerSuffix")) {
+                map["$key$readerSuffix"] as? String
+            } else {
+                null
+            }
+            ArbEntry(key = key, argNames = argNames, labelValue = labelValue, readerValue = readerValue)
         }
 
-        return ArbParseResult(uiKeys = uiKeys, pairedKeys = pairedKeys)
+        return ArbParseResult(entries = entries)
     }
 }
