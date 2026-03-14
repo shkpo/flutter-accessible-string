@@ -1,0 +1,2 @@
+[*.kt]
+ij_kotlin_packages_to_use_import_on_demand = io.mockk,org.junit.jupiter.api.Assertions
