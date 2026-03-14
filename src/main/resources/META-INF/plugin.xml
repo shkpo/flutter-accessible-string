@@ -1,0 +1,22 @@
+<idea-plugin>
+    <id>com.shkpo.flutter-accessible-string</id>
+    <name>Flutter Accessible String</name>
+    <version>1.0.0</version>
+    <vendor>shkpo</vendor>
+    <description>Generates AccessibleString companion Dart code from ARB files for Flutter projects.</description>
+    <depends>com.intellij.modules.platform</depends>
+    <extensions defaultExtensionNs="com.intellij">
+        <projectService serviceImplementation="com.shkpo.accessiblestring.AccessibleStringService"/>
+        <postStartupActivity implementation="com.shkpo.accessiblestring.StartupActivity"/>
+    </extensions>
+    <actions>
+        <group id="com.shkpo.accessiblestring.ActionsGroup" text="Flutter Accessible String" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <action
+                id="com.shkpo.accessiblestring.GenerateAction"
+                class="com.shkpo.accessiblestring.GenerateAction"
+                text="Generate Accessible Strings"
+                description="Generate s_accessible.g.dart from ARB files"/>
+        </group>
+    </actions>
+</idea-plugin>
