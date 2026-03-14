@@ -9,13 +9,14 @@ class IntelliJNotifier(private val project: Project) : INotifier {
     override fun info(message: String) {
         Notifications.Bus.notify(
             Notification("Flutter Accessible String", message, NotificationType.INFORMATION),
-            project
+            project,
         )
     }
+
     override fun error(message: String) {
         Notifications.Bus.notify(
             Notification("Flutter Accessible String", message, NotificationType.ERROR),
-            project
+            project,
         )
     }
 }

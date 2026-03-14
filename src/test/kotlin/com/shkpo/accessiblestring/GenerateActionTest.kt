@@ -7,7 +7,6 @@ import io.mockk.*
 import org.junit.jupiter.api.Test
 
 class GenerateActionTest {
-
     private val generateInvoker = mockk<IGenerateInvoker>(relaxed = true)
     private val project = mockk<Project>()
     private val action = GenerateAction(invokerFactory = { generateInvoker })

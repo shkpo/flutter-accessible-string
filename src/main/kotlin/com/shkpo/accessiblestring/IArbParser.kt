@@ -1,5 +1,8 @@
 package com.shkpo.accessiblestring
 
 interface IArbParser {
-    fun parse(projectBasePath: String, config: AccessibleGenConfig): ArbParseResult?
+    fun parse(
+        projectBasePath: String,
+        config: AccessibleGenConfig,
+    ): ArbParseResult?
 }

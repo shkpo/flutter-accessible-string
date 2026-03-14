@@ -4,8 +4,11 @@ import java.io.File
 import java.nio.file.Paths
 
 class DartCodeGenerator(private val vfsRefresher: IVfsRefresher) : IDartCodeGenerator {
-
-    override fun generate(projectBasePath: String, config: AccessibleGenConfig, parseResult: ArbParseResult) {
+    override fun generate(
+        projectBasePath: String,
+        config: AccessibleGenConfig,
+        parseResult: ArbParseResult,
+    ) {
         val outputDirFile = File(projectBasePath, config.outputDir)
         outputDirFile.mkdirs()
 
@@ -19,7 +22,11 @@ class DartCodeGenerator(private val vfsRefresher: IVfsRefresher) : IDartCodeGene
         vfsRefresher.refresh(outputFile)
     }
 
-    internal fun buildDartCode(importPath: String, readerSuffix: String, parseResult: ArbParseResult): String {
+    internal fun buildDartCode(
+        importPath: String,
+        readerSuffix: String,
+        parseResult: ArbParseResult,
+    ): String {
         val sb = StringBuilder()
         sb.appendLine("// GENERATED CODE - DO NOT MODIFY BY HAND")
         sb.appendLine("// ignore_for_file: non_constant_identifier_names")

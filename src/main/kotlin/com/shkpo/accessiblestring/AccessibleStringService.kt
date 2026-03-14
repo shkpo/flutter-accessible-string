@@ -9,7 +9,7 @@ class AccessibleStringService(
     internal val configReader: IConfigReader,
     internal val arbParser: IArbParser,
     internal val codeGenerator: IDartCodeGenerator,
-    internal val notifier: INotifier
+    internal val notifier: INotifier,
 ) {
     // IntelliJ が使うコンストラクタ
     constructor(project: Project) : this(
@@ -17,22 +17,24 @@ class AccessibleStringService(
         ConfigReader(),
         ArbParser(),
         DartCodeGenerator(IntelliJVfsRefresher()),
-        IntelliJNotifier(project)
+        IntelliJNotifier(project),
     )
 
     fun generate() {
-        val basePath = project.basePath ?: run {
-            notifier.error("Could not determine project base path.")
-            return
-        }
+        val basePath =
+            project.basePath ?: run {
+                notifier.error("Could not determine project base path.")
+                return
+            }
 
         val config = configReader.read(basePath) ?: return
 
         try {
-            val parseResult = arbParser.parse(basePath, config) ?: run {
-                notifier.error("Could not find or parse master ARB file (locale: ${config.masterLocale}) in ${config.arbDir}.")
-                return
-            }
+            val parseResult =
+                arbParser.parse(basePath, config) ?: run {
+                    notifier.error("Could not find or parse master ARB file (locale: ${config.masterLocale}) in ${config.arbDir}.")
+                    return
+                }
             codeGenerator.generate(basePath, config, parseResult)
             notifier.info("Generated s_accessible.g.dart")
         } catch (e: Exception) {

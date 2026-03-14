@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class FileChangeListenerTest {
-
     private val project = mockk<Project>()
     private val configReader = mockk<IConfigReader>()
     private val generateInvoker = mockk<IGenerateInvoker>(relaxed = true)

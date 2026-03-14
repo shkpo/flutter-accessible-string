@@ -7,39 +7,48 @@ import java.io.File
 import java.nio.file.Path
 
 class ConfigReaderTest {
-
     private val reader = ConfigReader()
 
     @Test
-    fun `read returns null when file does not exist`(@TempDir tempDir: Path) {
+    fun `read returns null when file does not exist`(
+        @TempDir tempDir: Path,
+    ) {
         val result = reader.read(tempDir.toString())
         assertNull(result)
     }
 
     @Test
-    fun `read returns null when accessible_gen key is missing`(@TempDir tempDir: Path) {
+    fun `read returns null when accessible_gen key is missing`(
+        @TempDir tempDir: Path,
+    ) {
         File(tempDir.toFile(), "accessible_gen.yaml").writeText("other_key: {}")
         val result = reader.read(tempDir.toString())
         assertNull(result)
     }
 
     @Test
-    fun `read returns null when YAML is invalid`(@TempDir tempDir: Path) {
+    fun `read returns null when YAML is invalid`(
+        @TempDir tempDir: Path,
+    ) {
         File(tempDir.toFile(), "accessible_gen.yaml").writeText(":\ninvalid:\n  - yaml: [")
         val result = reader.read(tempDir.toString())
         assertNull(result)
     }
 
     @Test
-    fun `read returns config with all fields when fully specified`(@TempDir tempDir: Path) {
-        File(tempDir.toFile(), "accessible_gen.yaml").writeText("""
+    fun `read returns config with all fields when fully specified`(
+        @TempDir tempDir: Path,
+    ) {
+        File(tempDir.toFile(), "accessible_gen.yaml").writeText(
+            """
             accessible_gen:
               arb_dir: lib/i18n
               master_locale: en
               reader_suffix: A11y
               trigger_file: lib/gen/l18n.dart
               output_dir: lib/gen/accessible
-        """.trimIndent())
+            """.trimIndent(),
+        )
 
         val result = reader.read(tempDir.toString())
 
@@ -52,7 +61,9 @@ class ConfigReaderTest {
     }
 
     @Test
-    fun `read returns defaults for missing fields`(@TempDir tempDir: Path) {
+    fun `read returns defaults for missing fields`(
+        @TempDir tempDir: Path,
+    ) {
         File(tempDir.toFile(), "accessible_gen.yaml").writeText("accessible_gen: {}")
         val result = reader.read(tempDir.toString())
 

@@ -1,12 +1,11 @@
 package com.shkpo.accessiblestring
 
+import com.intellij.openapi.project.Project
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import com.intellij.openapi.project.Project
 
 class AccessibleStringServiceTest {
-
     private val project = mockk<Project>()
     private val configReader = mockk<IConfigReader>()
     private val arbParser = mockk<IArbParser>()

@@ -8,7 +8,7 @@ data class AccessibleGenConfig(
     val masterLocale: String = "ja",
     val readerSuffix: String = "Reader",
     val triggerFile: String = "lib/generated/l10n.dart",
-    val outputDir: String = "lib/generated/accessible"
+    val outputDir: String = "lib/generated/accessible",
 )
 
 class ConfigReader : IConfigReader {
@@ -19,6 +19,7 @@ class ConfigReader : IConfigReader {
         return try {
             val yaml = Yaml()
             val rawMap: Map<String, Any> = yaml.load(configFile.inputStream()) ?: return null
+
             @Suppress("UNCHECKED_CAST")
             val genMap = rawMap["accessible_gen"] as? Map<String, Any> ?: return null
 
@@ -27,7 +28,7 @@ class ConfigReader : IConfigReader {
                 masterLocale = genMap["master_locale"] as? String ?: "ja",
                 readerSuffix = genMap["reader_suffix"] as? String ?: "Reader",
                 triggerFile = genMap["trigger_file"] as? String ?: "lib/generated/l18n.dart",
-                outputDir = genMap["output_dir"] as? String ?: "lib/generated/accessible"
+                outputDir = genMap["output_dir"] as? String ?: "lib/generated/accessible",
             )
         } catch (e: Exception) {
             null
