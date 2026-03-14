@@ -7,7 +7,7 @@ data class AccessibleGenConfig(
     val arbDir: String = "lib/l10n",
     val masterLocale: String = "ja",
     val readerSuffix: String = "Reader",
-    val triggerFile: String = "lib/generated/l18n.dart",
+    val triggerFile: String = "lib/generated/l10n.dart",
     val outputDir: String = "lib/generated/accessible"
 )
 

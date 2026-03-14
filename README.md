@@ -39,7 +39,7 @@ accessible_gen:
   arb_dir: lib/l10n                        # ARB ファイルのディレクトリ
   master_locale: ja                        # キー列挙の基準ロケール
   reader_suffix: Reader                    # スクリーンリーダー用キーのサフィックス
-  trigger_file: lib/generated/l18n.dart   # 監視対象ファイル（flutter_intl の出力）
+  trigger_file: lib/generated/l10n.dart   # 監視対象ファイル（flutter_intl の出力）
   output_dir: lib/generated/accessible    # 生成ファイルの出力先
 ```
 
