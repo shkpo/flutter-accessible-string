@@ -11,9 +11,8 @@ data class AccessibleGenConfig(
     val outputDir: String = "lib/generated/accessible"
 )
 
-object ConfigReader {
-
-    fun read(projectBasePath: String): AccessibleGenConfig? {
+class ConfigReader : IConfigReader {
+    override fun read(projectBasePath: String): AccessibleGenConfig? {
         val configFile = File(projectBasePath, "accessible_gen.yaml")
         if (!configFile.exists()) return null
 

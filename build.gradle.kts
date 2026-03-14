@@ -16,6 +16,11 @@ intellij {
     type.set("IC")
 }
 
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testImplementation("io.mockk:mockk:1.13.10")
+}
+
 tasks {
     withType<JavaCompile> {
         sourceCompatibility = "17"
@@ -23,6 +28,9 @@ tasks {
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "17"
+    }
+    test {
+        useJUnitPlatform()
     }
     patchPluginXml {
         sinceBuild.set("241")
