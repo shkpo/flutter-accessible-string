@@ -1,10 +1,10 @@
 # Flutter Accessible String
 
-Android Studio プラグイン。flutter_intl が生成した `l18n.dart` の変更を検知し、ARB ファイルを解析して UI 表記用文字列とスクリーンリーダー読み上げ用文字列のペアを `AccessibleString` として提供する Dart コードを自動生成します。
+flutter_intl が生成した `l18n.dart`から、UI 表記用文字列とスクリーンリーダー読み上げ用文字列のペアを生成する Android Studio のプラグインです。
 
 ## 背景
 
-flutter_intl を使うプロジェクトでは、UI 表記用文字列（例: `hoge`）とスクリーンリーダー読み上げ用文字列（例: `hogeReader`）が同一の ARB ファイルに混在します。従来はこの 2 つの紐づけを手実装していましたが、このプラグインにより自動化されます。
+同一の ARB ファイルに混在している UI 表記用文字列（例: `hoge`）とスクリーンリーダー読み上げ用文字列（例: `hogeReader`）の紐づけは手作業となっていた。このプラグインにより文法的な紐づけが実現します。
 
 ## 動作フロー
 
